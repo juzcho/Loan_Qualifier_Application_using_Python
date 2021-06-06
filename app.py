@@ -11,7 +11,8 @@ import fire
 import questionary
 from pathlib import Path
 
-from qualifier.utils.fileio import load_csv
+# This will import save and load functionality for csv files.  
+from qualifier.utils.fileio import load_csv, save_csv  
 
 from qualifier.utils.calculators import (
     calculate_monthly_debt_ratio,
@@ -30,7 +31,7 @@ def load_bank_data():
         The bank data from the data rate sheet CSV file.
     """
 
-    csvpath = questionary.text("Enter a file path to a rate-sheet (.csv):").ask()
+    csvpath = questionary.text("Enter a file path to a rate-sheet (.csv):").ask() #./data/daily_rate_sheet.csv`.
     csvpath = Path(csvpath)
     if not csvpath.exists():
         sys.exit(f"Oops! Can't find this path: {csvpath}")
@@ -109,6 +110,23 @@ def save_qualifying_loans(qualifying_loans):
     """
     # @TODO: Complete the usability dialog for savings the CSV Files.
     # YOUR CODE HERE!
+    # **Step 1:** Prompt the user whether or not they would like to save their qualifying loans.
+    
+    user_answer = questionary.confirm("Would you like to save your qualifying loans to a csv file?").ask() 
+    if user_answer == True:
+
+        # **Step 2:** Ask the user the output file path
+        
+        csv_path_from_user = questionary.text("You chose to save the csv file, where would you like save the csv file?").ask()
+        # This was created to hard code the header.
+        header = "Lender,Max Loan Amount,Max LTV,Max DTI,Min Credit Score,Interest Rate"
+        # The split method converts string to a list of strings given the ',' as a separator/ delimiter.
+        header = header.split(",") # ["Lender", "Max Loan Amount", ..., "Interest Rate"]  
+        # This determines if the user define an output path, and 
+        # if not empty then it will save it and name the file qualifying_loans.csv
+        if csv_path_from_user != "":  
+            csvpath = Path(csv_path_from_user + '/qualifying_loans.csv') # 
+            save_csv(csvpath, qualifying_loans, header)  # 
 
 
 def run():
