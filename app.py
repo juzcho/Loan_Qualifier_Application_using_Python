@@ -31,7 +31,7 @@ def load_bank_data():
         The bank data from the data rate sheet CSV file.
     """
 
-    csvpath = questionary.text("Enter a file path to a rate-sheet (.csv):").ask() #./data/daily_rate_sheet.csv`.
+    csvpath = questionary.text("Enter a file path to a rate-sheet (.csv):").ask() # ./data/daily_rate_sheet.csv
     csvpath = Path(csvpath)
     if not csvpath.exists():
         sys.exit(f"Oops! Can't find this path: {csvpath}")
@@ -98,7 +98,7 @@ def find_qualifying_loans(bank_data, credit_score, debt, income, loan, home_valu
     bank_data_filtered = filter_loan_to_value(loan_to_value_ratio, bank_data_filtered)
 
     print(f"Found {len(bank_data_filtered)} qualifying loans")
-
+    
     return bank_data_filtered
 
 
@@ -110,24 +110,33 @@ def save_qualifying_loans(qualifying_loans):
     """
     # @TODO: Complete the usability dialog for savings the CSV Files.
     # YOUR CODE HERE!
-    # **Step 1:** Prompt the user whether or not they would like to save their qualifying loans.
-    
-    user_answer = questionary.confirm("Would you like to save your qualifying loans to a csv file?").ask() 
-    if user_answer == True:
+    # Step 1: This will check if there are any qualifying loans for the user, 
+    # if not then it will prompt the user and automatically exit the program.
+    if len(qualifying_loans) == 0: 
+        sys.exit("You don't have any qualifying loans. Unable to save results.\nGood bye!") 
+        # but if there are no qualified loans then the program will exit and will not save any file.
 
-        # **Step 2:** Ask the user the output file path
+
+    # Step 2: Prompt the user whether or not they would like to save their qualifying loans.
+    user_answer = questionary.confirm("Would you like to save your qualifying loans to a csv file?").ask() 
+    if user_answer == True: #If the user answers Yes, then this will prompt the user to 
+
+        # Step 3: Ask the user the output file path
         
-        csv_path_from_user = questionary.text("You chose to save the csv file, where would you like save the csv file?").ask()
+        file_name_from_user = questionary.text("Enter a file name: ").ask()
         # This was created to hard code the header.
         header = "Lender,Max Loan Amount,Max LTV,Max DTI,Min Credit Score,Interest Rate"
         # The split method converts string to a list of strings given the ',' as a separator/ delimiter.
         header = header.split(",") # ["Lender", "Max Loan Amount", ..., "Interest Rate"]  
         # This determines if the user define an output path, and 
-        # if not empty then it will save it and name the file qualifying_loans.csv
-        if csv_path_from_user != "":  
-            csvpath = Path(csv_path_from_user + '/qualifying_loans.csv') # 
-            save_csv(csvpath, qualifying_loans, header)  # 
-
+        # if not empty then it will save it and user can name the file.
+        if file_name_from_user != "":  
+            csvpath = Path("./data/output/" + file_name_from_user + ".csv") # This will prompt the user where their file is located.
+            print("Your file is located at: " + str(Path(__file__).parent.absolute()) + "/" + str(csvpath)) # __file__ refers to “this” file which is app.py, 
+            # while .parent refers to the folder where “this” file is located, 
+            # and .absolute would give the absolute path. 
+            # In this case, it now refers to the .parent and we are chaining these with the dot “.” Operator
+            save_csv(csvpath, qualifying_loans, header)  
 
 def run():
     """The main function for running the script."""
@@ -142,7 +151,6 @@ def run():
     qualifying_loans = find_qualifying_loans(
         bank_data, credit_score, debt, income, loan_amount, home_value
     )
-
     # Save qualifying loans
     save_qualifying_loans(qualifying_loans)
 
