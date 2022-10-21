@@ -1,4 +1,4 @@
-# **Module 2 Challenge: Loan Qualifier Application**
+# **Loan Qualifier Application**
 
 ## Loan Qualifier 
 
