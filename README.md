@@ -101,8 +101,6 @@ This is brought to you by ET Home Loans.
 
 Contributed by: Justine Cho
 
-Email: juz317_cho@yahoo.com
-
 [![Linkedin](https://i.stack.imgur.com/gVE0j.png) LinkedIn](https://www.linkedin.com/in/justinecho)
 
 ---
